@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { FaMagnifyingGlass } from "react-icons/fa6";
+
 
 import "./listing.css";
 import hamburger from "../../assets/property/hamburger.png";
@@ -14,6 +16,7 @@ import { ClipLoader } from "react-spinners";
 import { useStateValue } from "../../StateProvider";
 import { BASE_URL } from "../../constant/constant";
 import axios from "axios";
+import FiltersBox from "./Filters";
 
 const Listing = () => {
   const { city } = useParams();
@@ -64,6 +67,40 @@ const Listing = () => {
     genderPreference: "",
     houseType: [],
   });
+
+
+  // const [isOpenFilter, setIsOpenFilter] = useState(false);
+  // const filterRef = useRef(null);
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (filterRef.current && !filterRef.current.contains(event.target)) {
+  //       setIsOpenFilter(false);
+  //     }
+  //   };
+    
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, []);
+
+  // const handleOpenFilter = () => {
+  //   setIsOpenFilter((prev) => !prev); // Toggle filter box visibility
+  // };
+  const [isOpenFilter, setIsOpenFilter] = useState(false);
+const filterRef = useRef(null);
+
+const handleOpenFilter = () => {
+  setIsOpenFilter((prev) => !prev); // Toggle filter box visibility
+};
+
+const handleCloseFilter = () => {
+  setIsOpenFilter(false); // Close filter modal
+};
+
+
+
+
 
   const cityLocalities = {
     // Respected Localities of Particular City
@@ -186,6 +223,7 @@ const Listing = () => {
       "Nishatganj (adjacent)",
     ],
   };
+  
   const handleSearchChange = (searchTerm) => {
     setSearchTerm(searchTerm);
     handleLocalitySelect(searchTerm);
@@ -524,13 +562,22 @@ const filteredResults = [...filteredLocalities, ...filteredAreas];
                     </div>
                   </div>
                 </div> */}
-                <div className="flex items-center justify-center  gap-4 pl-2">
+                <div className="flex flex-row items-center justify-center  gap-4 pl-2">
                   <div className="text-lg py-1 px-4
                    
                    rounded-full hover:cursor-pointer">
                     <h1 onClick={handleLocation}>
-                      {!city ? "Select Your City" : city}
+                      {!city ? "Select Your City" : city}<img
+                      src={loc}
+                      alt="Location"
+                      className="hover:cursor-pointer inline size-10 p-2"
+                      onClick={handleShowCity}
+                    />
                     </h1>
+                    
+                  </div>
+                  <div className="w-1 h-9 bg-black m-4 rounded">
+
                   </div>
                   {/* <div>
                     <img
@@ -586,7 +633,9 @@ const filteredResults = [...filteredLocalities, ...filteredAreas];
         </div>
       )}
     </div> */}
-    <div>
+    <div className="flex justify-around">
+    
+                    <FaMagnifyingGlass className="p-2 size-10"/>
   <input
     type="text"
     value={searchTerm}
@@ -721,9 +770,11 @@ const filteredResults = [...filteredLocalities, ...filteredAreas];
                       navigate(`/property-listing/${selectedCity}`);
                       setLocation(false);
                     }}
-                  />
+                  /><div className="w-1 h-9 bg-black m-4 rounded"></div>
                 </div>
+                
               </div>
+             
               <div className="h-14 w-56 bg-white text-black flex items-start justify-between px-5">
                 <div className="flex items-center justify-start gap-4 h-full w-2/4">
                   <div className="h-6 w-6 bg-[#EED98B] rounded-full flex items-center justify-center">
@@ -735,11 +786,24 @@ const filteredResults = [...filteredLocalities, ...filteredAreas];
                   <img
                     src={drop}
                     alt="Dropdown"
-                    onClick={handleOpen}
+                    onClick={handleOpenFilter}
                     className="cursor-pointer"
                   />
                 </div>
+                {/* <div className="m-20  -ml-[100px]">
+                  <FiltersBox/>
+                </div> */}
+                
+                {isOpenFilter && (
+        <div className="m-20 -ml-[100px]" ref={filterRef}>
+          <FiltersBox handleCloseFilter={handleCloseFilter}/>
+        </div>
+      )}
+                
+                <div className="w-1 h-9 bg-black m-4  mt-[11px] rounded"></div>
               </div>
+              
+
               <div className="flex items-center justify-start  bg-white" onClick={handleMode}>
                   <p className="text-black p-4">Sort</p>
                   <img
@@ -747,7 +811,7 @@ const filteredResults = [...filteredLocalities, ...filteredAreas];
                     alt="Dropdown"
                     className={`${
                       mode ? "rotate-180" : "rotate-0"
-                    } mt-1 cursor-pointer p-1`}
+                    } mt-1 cursor-pointer p-4`}
                     
                   />
                   <div className="relative text-black">

@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 import { ArrowDropDown } from "@mui/icons-material";
 
-const Filters = () => {
+const FiltersBox = ({handleCloseFilter}) => {
   const [anchors, setAnchors] = useState({
     houses: null,
     flats: null,
@@ -267,6 +267,17 @@ const Filters = () => {
         >
           Done
         </Button>
+        <Button
+    onClick={handleCloseFilter}
+    sx={{
+      color: "#4A7F79",
+      textTransform: "none",
+      fontSize: "0.875rem",
+      fontWeight: 500,
+    }}
+  >
+    Close
+  </Button>
       </Box>
     </Menu>
   );
@@ -307,4 +318,4 @@ const Filters = () => {
   );
 };
 
-export default Filters;
+export default FiltersBox;
